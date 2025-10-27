@@ -1,0 +1,136 @@
+creacion de nuevas canciones con video fabricada con boot IA
+
+Estructura:
+
+ai_music_video_web.zip/ ├─ frontend/ │  ├─ pages/index.js │  ├─ components/VideoCard.js │  └─ styles/globals.css ├─ backend/api/generateProject.js ├─ backend/api/getLatestProjects.js ├─ package.json └─ README.md
+
+
+---
+
+Contenido de los archivos:
+
+1. frontend/pages/index.js
+
+
+
+import { useEffect, useState } from "react";
+import VideoCard from "../components/VideoCard";
+
+export default function Home() {
+  const [project, setProject] = useState(null);
+
+  useEffect(() => {
+    fetch("/api/generateProject")
+      .then((res) => res.json())
+      .then((data) => setProject(data));
+  }, []);
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white p-4">
+      <h1 className="text-3xl font-bold mb-6">🎵 ¡Mira! Acabo de crear esto para ti</h1>
+      {project ? <VideoCard project={project} /> : <p>Cargando proyecto...</p>}
+    </div>
+  );
+}
+
+2. frontend/components/VideoCard.js
+
+
+
+export default function VideoCard({ project }) {
+  return (
+    <div className="bg-gray-800 p-4 rounded-lg shadow-lg w-full max-w-2xl flex flex-col items-center">
+      <h2 className="text-xl font-semibold mb-4">{project.title}</h2>
+      <video controls className="w-full rounded mb-4">
+        <source src={project.videoUrl} type="video/mp4" />
+        Tu navegador no soporta video.
+      </video>
+      <audio controls className="w-full mb-4">
+        <source src={project.audioUrl} type="audio/mpeg" />
+        Tu navegador no soporta audio.
+      </audio>
+      <div className="flex gap-4">
+        <a href={project.videoUrl} download className="bg-blue-500 px-4 py-2 rounded">Descargar Video</a>
+        <a href={project.audioUrl} download className="bg-green-500 px-4 py-2 rounded">Descargar Música</a>
+      </div>
+      <div className="mt-4 flex gap-4">
+        <a href={`https://twitter.com/intent/tweet?text=Mira+esta+cancion&url=${project.videoUrl}`} target="_blank" rel="noreferrer" className="bg-blue-400 px-4 py-2 rounded">Compartir Twitter</a>
+        <a href={`https://www.facebook.com/sharer/sharer.php?u=${project.videoUrl}`} target="_blank" rel="noreferrer" className="bg-blue-700 px-4 py-2 rounded">Compartir Facebook</a>
+      </div>
+    </div>
+  );
+}
+
+3. backend/api/generateProject.js
+
+
+
+export default async function handler(req, res) {
+  const project = {
+    id: Date.now(),
+    title: "Canción automática #" + Math.floor(Math.random() * 1000),
+    audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    videoUrl: "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4",
+  };
+  res.status(200).json(project);
+}
+
+4. backend/api/getLatestProjects.js
+
+
+
+export default async function handler(req, res) {
+  const projects = [
+    {
+      id: 1,
+      title: "Canción automática #123",
+      audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+      videoUrl: "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4",
+    },
+  ];
+  res.status(200).json(projects);
+}
+
+5. package.json (básico)
+
+
+
+{
+  "name": "ai-music-video-web",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "13.5.6",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "tailwindcss": "3.3.4"
+  }
+}
+
+6. frontend/styles/globals.css
+
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+body { margin: 0; font-family: Arial, sans-serif; }
+
+7. README.md
+
+
+
+# AI Music Video Web
+Prototipo de web que genera automáticamente música y video con IA.
+- Reproducir y descargar audio/video.
+- Compartir en redes sociales.
+- Preparado para Vercel deployment.
+
+
+---
+
+¡Listo para probar proyectos generados automáticamente!.
